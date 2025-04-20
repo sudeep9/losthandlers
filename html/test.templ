@@ -1,0 +1,72 @@
+package html
+
+import (
+    "fmt"
+)
+
+templ Loadtabs() {
+    <div class="flex flex-col">
+        <div class="hidden" data-signals-tabno="'t1'"></div>
+        <div id="tablist" class="flex">
+            <button class="btn" id="t1" data-on-click="$tabno='t1'">Tab1</button>
+            <button class="btn ml-1" id="t2" data-on-click="$tabno='t2'">Tab2</button>
+        </div>
+        <div id="tabcontent">
+            <div id="t1-content" data-show="$tabno === 't1'">
+                Tab 1 content
+            </div>
+            <div id="t2-content" data-show="$tabno === 't2'">
+                Tab 2 content
+            </div>
+        </div>
+    </div>
+}
+
+templ GenTabContent(id string, msg string) {
+    {{contentId := fmt.Sprintf("%s-content", id)}}
+
+    <div id={contentId} data-show={fmt.Sprintf("$tabno == '%s'", id)}>
+        {msg}
+    </div>
+}
+
+templ TestHome() {
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>test page</title>
+        <style>
+            .btn {
+                background-color: rgb(80, 80, 80);
+                padding: 3px;
+                color: white;
+            }
+
+            .btn:hover {
+                cursor: pointer;
+            }
+        </style>
+    </head>
+
+    <body id="root" style="padding: 10px;">
+        <h1>Steps to reproduce</h1>
+        <ul style="margin-bottom: 4px;">
+            <li>1. Click 'Load Tabs'. It will fetch the html and set div's (id="app") inner html. Tabs work correctly.</li>
+            <li>2. Click "Load Other Content". This will load another content into the same div as above. </li>
+            <li>3. Click the 'Load Tabs' again. The tabs will not work</li>
+        </ul>
+        <button class="btn" data-on-click="@get('/alltabs')">Load Tabs</button>
+        <button class="btn" data-on-click="@get('/other')">Load Other Content</button>
+        <div id="app" style="border: 1px solid gray; margin-top: 10px;">
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.0-beta.11/bundles/datastar.js"></script>
+    </body>
+</html>
+}
+
+templ Div(msg string) {
+    <div>{msg}</div>
+}
