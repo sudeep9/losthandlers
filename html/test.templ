@@ -4,18 +4,37 @@ import (
     "fmt"
 )
 
+var counter = int64(0)
+
+func genId(id string, cnt int64) string {
+    out := fmt.Sprintf("%s_%d", id, cnt)
+    return out
+}
+
+func getCounter() int64 {
+    n := counter
+    counter++
+    return n
+}
+
 templ Loadtabs() {
+    {{
+        n := getCounter()
+        t1 := genId("t1", n)
+        t2 := genId("t2", n)
+
+    }}
     <div class="flex flex-col">
-        <div class="hidden" data-signals-tabno="'t1'"></div>
+        <div class="hidden" data-signals-tabno={fmt.Sprintf("'%s'", t1)}></div>
         <div id="tablist" class="flex">
-            <button class="btn" id="t1" data-on-click="$tabno='t1'">Tab1</button>
-            <button class="btn ml-1" id="t2" data-on-click="$tabno='t2'">Tab2</button>
+            <button class="btn" id={t1} data-on-click={fmt.Sprintf("$tabno='%s'", t1)}>Tab1</button>
+            <button class="btn ml-1" id={t2} data-on-click={fmt.Sprintf("$tabno='%s'", t2)}>Tab2</button>
         </div>
         <div id="tabcontent">
-            <div id="t1-content" data-show="$tabno === 't1'">
+            <div id="t1-content" data-show={fmt.Sprintf("$tabno === '%s'", t1)}>
                 Tab 1 content
             </div>
-            <div id="t2-content" data-show="$tabno === 't2'">
+            <div id="t2-content" data-show={fmt.Sprintf("$tabno === '%s'", t2)}>
                 Tab 2 content
             </div>
         </div>
